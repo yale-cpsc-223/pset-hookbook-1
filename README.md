@@ -32,6 +32,15 @@ Your program must:
 1. All of the above steps must be taken with the fact in mind that future requirements will increase the information you will hold about each pirate.
 
 ## Files you are given
+* `pirate.h` (Struct Definition), with the following (partial) struct definition.
+    You must complete the task marked by `TODO`.
+    ```C
+    // Type of a pirate
+    typedef struct {
+        // TODO: define this struct
+    } pirate;
+    ```
+
 * `pirate_list.h` (Interface), with the following declarations.
     **You may not change anything in this file**.
     ```C
@@ -45,28 +54,28 @@ Your program must:
     /*
      * Return the index of the pirate with the same name as p, or a value greater than or equal to the length of the list if the pirate is not in the list.
      */
-    size_t list_index_of(pirate_list* pirates, void* p);
+    size_t list_index_of(pirate_list* pirates, pirate* p);
 
     /*
-     * Only if there is no pirate in the list with the same name as p, insert the pirate p into the list at index idx, shifting the latter part of the list one “slot” to the right.
+     * Only if there is no pirate in the list with the same name as p, insert pirate p into the list at index idx by copying the pointer, shifting the latter part of the list one “slot” to the right.
      * If there is a pirate in the list with the same name as p, do nothing, and return a pointer to the pirate that was not inserted.
      * If the pirate was inserted into the list, return NULL
      */
-    void* list_insert(pirate_list* pirates, void* p, size_t idx);
+    pirate* list_insert(pirate_list* pirates, pirate* p, size_t idx);
 
     /*
-     * Remove the pirate from the list with the same name as p, and return it.
+     * Remove the pirate from the list with the same name as p, and return a pointer to it.
      * If there is no pirate in the list with the same name as p, return NULL
      */
-    void* list_remove(pirate_list* pirates, void* p);
+    pirate* list_remove(pirate_list* pirates, void* p);
 
     /*
-     * Return a pointer to the pirate at index idx in the list, or NULL if idx is not a valid index (i.e., it is >= the length of the list).
+     * Return a pointer to the pirate pointed to by index idx in the list, or NULL if idx is not a valid index (i.e., it is >= the length of the list).
      */
-    void* list_access(pirate_list* pirates, size_t idx);
+    pirate* list_access(pirate_list* pirates, size_t idx);
 
     /*
-     * Sort the list of pirates in alphabetical order by the pirate name
+     * Sort the list of pirates in alphabetical order by name
      */
     void list_sort(pirate_list* pirates);
 
@@ -97,11 +106,11 @@ Your program must:
         1. Sort the list in alphabetical order by pirate name
         1. Print the sorted list to `stdout`, with one pirate name per line, following the last pirate's name with a newline character
         1. Release all resources (files, memory, _etc._)
-* `pirate_list.c` (Implementation), containing a body for every function declared in `pirate_list.h`, and a definition for `struct implementation`.
-    * `pirate_list` must be implemented as an **array list**, _a.k.a._ **resizing array**.
-    * The initial capacity of the list must be defined as a constant named `INITIAL_CAPACITY`, having value `25`.
+* `pirate_list.c` (Implementation), containing a body for every function declared in `pirate_list.h`, and a definition for `struct implementation`
+    * `pirate_list` must be implemented as an **array list**, _a.k.a._ **resizing array**
+    * The initial capacity of the list must be defined as a constant named `INITIAL_CAPACITY`, having value `25`
     * When the array capacity changes, it must change by a factor of `2`, which must be the value of a constant named `RESIZE_FACTOR`
-    * In addition to functions declared in `pirate_list.h`, `pirate_list.c` must declare and implement two "helper" functions that are not declared in the header file:
+    * In addition to functions declared in `pirate_list.h`, `pirate_list.c` must contain a declaration and implementation for each of the following two "helper" functions that are not declared in the header file:
         ```C
         /*
          * Check if the actual number of pirates in the array is "too large"; if it is, increase the capacity of the array by a factor of RESIZE_FACTOR.
@@ -130,9 +139,6 @@ Your program must:
 * If you factor out some or all of the functionality of `main` into helper functions (such as a function to print the list), you must create a header file and a source file **separate from `hookbook.c`** with their declarations and bodies, respectively.
     The additional files may be named anything you like, but it must be a "good" name to earn full style points.
     We suggest "`libhookbook`".
-* If you define a new type to store information about each pirate, you must create a header file and a source file **separate from all others** with relevant declarations and definitions, respectively.
-    The additional files may be named anything, but we suggest `pirate.h` and `pirate.c`, and we suggest the type is named `pirate`.
-    Whatever you choose, as above, the names must be "good" to earn full style points.
 * Each header and source file must use `#include` directives to include things that are directly needed by that file&mdash;no more, no less.
     Style points will be deducted for clearly extraneous `#include` directives.
 * You may not use `qsort` to sort the list, nor any other pre-implemented sorting function.
@@ -144,10 +150,6 @@ Your program must:
 * Factor out the functionality of `main` into several well-named, easily-understood functions
 * Do not use a raw `char*` for pirate information&mdash;remember, your program must easily adapt to store additional information about each pirate later on!
 * To help manage `#include` directives, draw a "map" of your project's files, with arrows marking direct dependencies, and use that to write your include directives
-* `void*` is C-speak for "a pointer to something".
-    That may not seem terribly usefule, but sometimes you happen to know that a `void*` is actually "a pointer to a pirate" (such as when you remove an item from your `pirate_list`).
-    You can make this knowledge explicit in your program by using a **type cast**, for example `pirate* p = (pirate*) list_remove(...);`.
-    It's important to note here that type casting doesn't actually _do_ anything; it is just a way for you to tell the compiler "hey, I know this `void*` is actually a `pirate*`, so let's treat it as such."
 * `NULL` is a special pointer value that means "points to nothing".
     Attempting to dereference `NULL` will result in a segmentation fault, which your program must avoid.
 

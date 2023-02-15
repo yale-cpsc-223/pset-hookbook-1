@@ -92,7 +92,7 @@ Your program must:
 
 * `makefile` (Incomplete)
     * The provided makefile defines two variables, `CC` and `CFLAGS`.
-        You must not change those values.
+        You must submit a makefile having identical values for those two variables.
     * The first target, `HookBook`, is incomplete and you must complete it. 
         However you must not change its name or its position in the makefile.
     * The rest of the makefile is up to you.
@@ -154,19 +154,19 @@ Your program must:
     Attempting to dereference `NULL` will result in a segmentation fault, which your program must avoid.
 
 ## Correctness
-We will release a downloadable testing script on Feb 17 with which you can test that your code conforms to the prescribed output format (which is quite a bit more straightforward than in previous assignments) for a limited set of test cases.
-The README file associated with that download will contain instructions for adding your own test cases to the `tests` directory.
+We will release a downloadable testing script on Feb 17 with which you can test that your code conforms to the prescribed output format (which is quite a bit more straightforward than in previous assignments) on a limited set of test cases.
+The `README` file associated with that download will contain instructions for adding your own test cases to the `tests` directory.
 We recommend that you add some to increase the breadth of tests for your project.
 
 Your code will also be tested against an autograder running on Gradescope's servers.
-In the event that your code produces output from the autograder that does not match what you expect, the program will be run on the Zoo, which will be treated as the "official" output from your code.
-It is therefore imperative that you test your program on the Zoo to confirm its behavior.
+In the event that your code produces output from the autograder that does not match what you expect&mdash;or if the Gradescope autograder simply does not cooperate&mdash;your submission will be run on the Zoo, which will be treated as the "official" output from your code.
+**It is therefore imperative that you test your program on the Zoo to confirm its behavior.**
 
 ## Assumptions
 You may assume the following about the command-line arguments to the program:
-* Nothing! 
+* **Nothing!** 
     We will run your program with no command-line arguments, many command-line arguments, and a single command-line argument that is the name of a file that does not exist.
-    In all cases where the command-line argument is not the name of an existing text file, your program must exit with status code `1`.
+    In all cases where the command-line argument is not the name of an existing text file, your program must exit with status code `1` and not cause any errors such as segmentation faults.
 
 You may assume the following about the file referred to by the command-line argument, if it exists:
 * It is a text file.

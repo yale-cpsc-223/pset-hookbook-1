@@ -1,6 +1,8 @@
 #ifndef __PIRATE_LIST_H__
 #define __PIRATE_LIST_H__
 
+#include <stdlib.h>
+
 #include "pirate.h"
 
 // Type of a list of pirates
@@ -27,7 +29,7 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx);
  * Remove the pirate from the list with the same name as p, and return a pointer to it.
  * If there is no pirate in the list with the same name as p, return NULL
  */
-pirate *list_remove(pirate_list *pirates, void *p);
+pirate *list_remove(pirate_list *pirates, pirate *p);
 
 /*
  * Return a pointer to the pirate pointed to by index idx in the list, or NULL if idx is not a valid index (i.e., it is >= the length of the list).

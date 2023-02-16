@@ -17,12 +17,12 @@ This means that your Hookbook program must easily transform to accept a list of 
 * Their current captain (who is another pirate!)
 * The number of treasures they've found
 * Their favorite port of call
-* Maybe others
+* Maybe other things
 
 After the list of pirates is loaded by your program, your job will be to display the name of each pirate, sorted in alphabetical order, with each one followed by a newline.
 
-> **Note**: Once again, the printing of names only is something of a placeholder until the pirates give you their full profiles.
-> You'll be given instructions on how to display the pirate's profiles later, but your program must be ready to easily adapt to that future requirement.
+> **Note**: As with input, the printing of names only is something of a placeholder until the pirates give you their full profiles.
+> You'll be given instructions on how to display the pirates' profiles later, but your program must be ready to easily adapt to that future requirement.
 
 ### To summarize
 Your program must:
@@ -32,13 +32,11 @@ Your program must:
 1. All of the above steps must be taken with the fact in mind that future requirements will increase the information you will hold about each pirate.
 
 ## Files you are given
-* `pirate.h` (Struct Definition), with the following (partial) struct definition.
+* `pirate.h` (Type Definition), with the following (partial) type definition.
     You must complete the task marked by `TODO`.
     ```C
     // Type of a pirate
-    typedef struct {
-        // TODO: define this struct
-    } pirate;
+    typedef /* TODO: complete this typedef */ pirate;
     ```
 
 * `pirate_list.h` (Interface), with the following declarations.
@@ -67,7 +65,7 @@ Your program must:
      * Remove the pirate from the list with the same name as p, and return a pointer to it.
      * If there is no pirate in the list with the same name as p, return NULL
      */
-    pirate* list_remove(pirate_list* pirates, void* p);
+    pirate* list_remove(pirate_list* pirates, pirate* p);
 
     /*
      * Return a pointer to the pirate pointed to by index idx in the list, or NULL if idx is not a valid index (i.e., it is >= the length of the list).
@@ -92,10 +90,15 @@ Your program must:
 
 * `makefile` (Incomplete)
     * The provided makefile defines two variables, `CC` and `CFLAGS`.
-        You must submit a makefile having identical values for those two variables.
-    * The first target, `HookBook`, is incomplete and you must complete it. 
-        However you must not change its name or its position in the makefile.
-    * The rest of the makefile is up to you.
+        You must submit a makefile having identical values for those two variables:
+        ```
+        CC = gcc
+        CFLAGS = -std=c17 -Wall -Werror -pedantic -g
+        ```
+
+    * The first target, `HookBook`, is incomplete and you must complete it, however, you must not change its name or its position in the file.
+
+    * The rest of `makefile` is up to you.
 
 ## Files you must create
 * `hookbook.c` (Driver)
@@ -103,7 +106,7 @@ Your program must:
         Your `main` function must:
         1. Take as the only command-line argument the path to a file containing the pirates' names who will be placed into our HookBook.
         1. Open that file and read from it the list of pirate names, appearing one on each line, storing them in a `pirate_list*`
-        1. Sort the list in alphabetical order by pirate name
+        1. Sort the list in [lexicographic (TODO: fix link)](https://wikipedia.org/lexicographic_ordering) order by pirate name
         1. Print the sorted list to `stdout`, with one pirate name per line, following the last pirate's name with a newline character
         1. Release all resources (files, memory, _etc._)
 * `pirate_list.c` (Implementation), containing a body for every function declared in `pirate_list.h`, and a definition for `struct implementation`
@@ -114,7 +117,7 @@ Your program must:
         ```C
         /*
          * Check if the actual number of pirates in the array is "too large"; if it is, increase the capacity of the array by a factor of RESIZE_FACTOR.
-         * If the array capacity was changed, print to stderr the phrase "Expand to", followed by the new capacity of the list and a newline. Here is a possible print statement:
+         * If the array capacity was changed, print to stderr the string "Expand to ", followed by the new capacity of the list and a newline. Here is a possible print statement:
          *
          *     fprintf(stderr, "Expand to %zu\n", new_capacity);
          *
@@ -124,7 +127,7 @@ Your program must:
 
         /*
          * Check if the actual number of pirates in the array is "too small"; if it is, decrease the capacity of the array by a factor of RESIZE_FACTOR.
-         * If the array capacity was changed, print to stderr the phrase "Contract to" followed by the new capacity of the list. Here is a possible print statement:
+         * If the array capacity was changed, print to stderr the string "Contract to " followed by the new capacity of the list. Here is a possible print statement:
          *
          *     fprintf(stderr, Contract to %zu\n, new_capacity);
          *
@@ -139,10 +142,16 @@ Your program must:
 * If you factor out some or all of the functionality of `main` into helper functions (such as a function to print the list), you must create a header file and a source file **separate from `hookbook.c`** with their declarations and bodies, respectively.
     The additional files may be named anything you like, but it must be a "good" name to earn full style points.
     We suggest "`libhookbook`".
-* Each header and source file must use `#include` directives to include things that are directly needed by that file&mdash;no more, no less.
-    Style points will be deducted for clearly extraneous `#include` directives.
+* You may modify `pirate.h` as you see fit (except that there _must_ remain a declaration of a type named `pirate`).
+    This includes declaring functions in that file or making the `struct` an **opaque struct**.
+    If you make such modifications, you must also create a C source file named `pirate.c` with bodies for functions declared in `pirate.h` and/or the definition of the opaque struct.
+* Each header and source file must use `#include` directives to include things that are _directly_ used by that file&mdash;no more, no less.
+    Style points will be deducted for clearly extraneous `#include` directives or directives that rely on transitive inclusions.
 * You may not use `qsort` to sort the list, nor any other pre-implemented sorting function.
-    You **must** implement a sorting algorithm on your own, and it must run in $O(n^2)$ time or better and use $O(n)$ additional memory (or less).
+    You **must** implement a sorting algorithm on your own, and it must run in $O(n^2)$ time or better and use $O(n)$ additional memory (or less), where $n$ is the number of items in the list.
+    > **Note**: These efficiency bounds are quite permissive.
+    > In a later assignmnet you will have an opportunity to implement a faster sorting algorithm, running in average-case $O(n \log n)$ time and using $O(1)$ additional memory.
+* You must create _exactly one_ pirate for each name in the input file&mdash;you may not create copies of pirates (copying _pointers_ to pirates is OK)
 
 ## Suggestions and Notes
 * In class, we implemented a naive array list to which you could append and remove `int`s from just one end.
@@ -162,16 +171,50 @@ Your code will also be tested against an autograder running on Gradescope's serv
 In the event that your code produces output from the autograder that does not match what you expect&mdash;or if the Gradescope autograder simply does not cooperate&mdash;your submission will be run on the Zoo, which will be treated as the "official" output from your code.
 **It is therefore imperative that you test your program on the Zoo to confirm its behavior.**
 
+### Examples
+Here are several example runs of the program showing the output both to `stdout` and to `stderr`.
+
+1. File with three names
+    > File: `A_list.txt`
+    > ```text
+    > jack sparrow
+    > william turner
+    > elizabeth swan
+    > ```
+
+    > Command and output:
+    > ```text
+    > $ ./HookBook A_list.txt
+    > elizabeth swan
+    > jack sparrow
+    > william turner
+    > ```
+
+
+1. File with 30 names
+    > File: `B_list.txt`
+    > ```text
+    > TODO: 30 names here
+
+    > Command and output:
+    > ```text
+    > $ ./HookBook B_list.txt
+    > Expand to 50
+    > TODO: 30 names here
+    > ```
+
 ## Assumptions
 You may assume the following about the command-line arguments to the program:
 * **Nothing!** 
     We will run your program with no command-line arguments, many command-line arguments, and a single command-line argument that is the name of a file that does not exist.
-    In all cases where the command-line argument is not the name of an existing text file, your program must exit with status code `1` and not cause any errors such as segmentation faults.
+    In all cases where the first command-line argument is not the name of file from which you can read, your program must exit with status code `1` and not cause any errors such as segmentation faults.
 
-You may assume the following about the file referred to by the command-line argument, if it exists:
+You may assume the following about the file referred to by the command-line argument, if you can open it for reading:
 * It is a text file.
-    That is, we will not try to open a binary file, _e.g._, an image of a pirate ship
-* The last line of the file is an empty line
+    That is, we will not try to open a binary file, _e.g._, an image
+* Every line contains exactly one name
+* No name in the file will be longer than 64 characters
+* No name in the file will contain any non-ASCII characters
 
 ## Submission
 Submit your project to Gradescope by uploading all files needed to run your program.

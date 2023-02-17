@@ -106,7 +106,7 @@ Your program must:
         Your `main` function must:
         1. Take as the only command-line argument the path to a file containing the pirates' names who will be placed into our HookBook.
         1. Open that file and read from it the list of pirate names, appearing one on each line, storing them in a `pirate_list*`
-        1. Sort the list in [lexicographic (TODO: fix link)](https://wikipedia.org/lexicographic_ordering) order by pirate name
+        1. Sort the list in [lexicographic](https://en.wikipedia.org/wiki/Lexicographic_order) order by pirate name
         1. Print the sorted list to `stdout`, with one pirate name per line, following the last pirate's name with a newline character
         1. Release all resources (files, memory, _etc._)
 * `pirate_list.c` (Implementation), containing a body for every function declared in `pirate_list.h`, and a definition for `struct implementation`

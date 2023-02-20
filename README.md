@@ -194,13 +194,71 @@ Here are several example runs of the program showing the output both to `stdout`
 1. File with 30 names
     > File: `B_list.txt`
     > ```text
-    > TODO: 30 names here
+    > captain mansel alcantra
+    > john alexander
+    > algerine pirates
+    > ali basha
+    > captain alleston
+    > alwilda
+    > alexander ammand
+    > ibrahim ameer
+    > captain cornelius anderson
+    > captain androeas
+    > sultan of timor angora
+    > angria
+    > captain thomas anstis
+    > antonio
+    > john rose archer
+    > james austin
+    > captain john avery
+    > captain bridgeman
+    > captain aylett
+    > job baily
+    > captain baker
+    > roger ball
+    > john ballet
+    > captain baltizar
+    > captain bannister
+    > barbarosa
+    > redbeard
+    > captain nicholas barbe
+    > captain barnard
+    > captain barnes
 
     > Command and output:
     > ```text
     > $ ./HookBook B_list.txt
     > Expand to 50
-    > TODO: 30 names here
+    > alexander ammand
+    > algerine pirates
+    > ali basha
+    > alwilda
+    > angria
+    > antonio
+    > barbarosa
+    > captain alleston
+    > captain androeas
+    > captain aylett
+    > captain baker
+    > captain baltizar
+    > captain bannister
+    > captain barnard
+    > captain barnes
+    > captain bridgeman
+    > captain cornelius anderson
+    > captain john avery
+    > captain mansel alcantra
+    > captain nicholas barbe
+    > captain thomas anstis
+    > ibrahim ameer
+    > james austin
+    > job baily
+    > john alexander
+    > john ballet
+    > john rose archer
+    > redbeard
+    > roger ball
+    > sultan of timor angora
     > ```
 
 ## Assumptions

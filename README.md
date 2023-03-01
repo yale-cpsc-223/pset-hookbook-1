@@ -78,7 +78,7 @@ Such lines should be ignored.
 In this case only the *last* value for a particular label must be persisted in the pirate's profile.
     > **Note**: Skills are an exception to this, in that *every* listed skill must be persisted to the pirate's profile
 * There may be duplicate skills listed for a given pirate.
-In this case, only *one instance* of each skill must be persisted in the pirate's profile.
+In this case, duplicate skills are to be interpreted as increased expertise by that pirate in that skill (the number of occurences of a particular skill is that skill's "rating"), and the rating of a skill must be persisted in the pirate's profile.
 * Not all pirates with a profile will be party to a pirate/captain pair
 * A pirate may be on the left-hand side of several pirate/captain pairs.
 In this case only the *last* appearance of a pirate on the left-hand side of a pair should be persisted in your application
@@ -101,17 +101,24 @@ Pirate: <pirate-name>
     Vessel: <pirate-vessel>
     Treasure: <pirate-treasure>
     Favorite Port of Call: <pirate-port>
-    Skills: <skill-0>
-            <skill-1>
-            <skill-2>
+    Skills: <skill-0> <skill-0-rating>
+            <skill-1> <skill-1-rating>
+            <skill-2> <skill-2-rating>
             [...and so on]
 
 ```
 
 In other words, the output for each pirate profile must begin with a line containing the text `"Pirate: "` followed by the pirate's title and name (do not print `<` or `>`).
 Thereafter, each line must be indented by **4 spaces**, and contain&mdash;*in order*&mdash;the pirate's title (labeled `"Title: "`), the profile of the pirate's captain (labeled and indented as above), the pirate's vessel of employ (labeled `"Vessel: "`), the pirate's treasure count (labeled `"Treasure: "`), and the pirate's favorite port of call (labeled `"Favorite Port of Call: "`).
-After those fields, there must be a list, labeled `"Skills: "`, followed by all of the pirate's skills, each on on its own line and left-aligned with one another (a total of 12 spaces from the beginning of the line).
-The skills in the list must be sorted in increasing lexicographic order.
+After those fields, there must be a list, labeled `"Skills: "`, containing all of the pirate's skills and each skill's "rating", with each skill and rating separated by a single space and followed by a newline, and the skills must be left-aligned with one another (a total of **12 spaces** from the beginning of the line).
+The rating must displayed as as series of asterisks (`'*'`), with the number of asterisks matching the skill's rating.
+The skills in the list must be sorted in increasing lexicographic order, and there must be only one occurrence of each skill displayed in the output.
+
+For example, if a pirate's profile has 3 occurrences of the skill "swashbuckling" and 1 ocurrence of the skill "good with kids", the output would have the following lines:
+```
+    Skills: good with kids *
+            swashbuckling ***
+```
 
 If there is any field that was not given a value in a pirate's profile, the text `"(None)"` must be displayed on the corresponding line.
 If a pirate has no captain, then the lines containing the captain's title and favorite port of call must not be present at all.
@@ -122,14 +129,16 @@ If a pirate has no captain, then the lines containing the captain's title and fa
 ## Efficiency and Source Code Requirements
 
 Beyond correctness with regard to the [output specification](#output-specification) above, there are several other benchmarks your solution must pass to earn full credit on this assignment.
-1. Creating a pirate from its profile in the input file must take no more than $O(s)$ time, where $s$ is the number of skills the pirate poseses.
+1. Creating a pirate from its profile in the input file must take no more than $O(s)$ time, where $s$ is the number of skills (including duplicates) the pirate poseses.
     * There is some subtlety here: the input specification does not forbid arbitrarily many lines of input being associated with one pirate, due to its allowance of duplicates.
-    The time bound for creating a pirate applies *only* for pirate profiles that have no duplicate entries (profiles with duplicate entries must meet no particular time bound for their instantiation).
+    The time bound for creating a pirate applies *only* for pirate profiles that have no duplicate non-skill entries (profiles with duplicate non-skill entries must meet no particular time bound for their instantiation).
+    > **Note**: While the rating for each skill must be persisted, pay careful attention to this complexity requirement when deciding precisely *how* to persist skill ratings.
+    > An implication of this time bound is that each skill from input must be persisted in constant ($O(1)$) time.
 1. Sorting the list of pirates must require no more than $O(n^2)$ comparisons, where $n$ is the number of pirates in the list, *no matter which field is used to sort it*.
 1. Printing a pirate's profile must take no more than $O(s)$ time, where $s$ is the number of skills the pirate posesses.
 1. You are required to make minimal modifications to the existing `pirate_list.h` header file.
 In particular, you may only add at most one parameter to at most one function in the file, and you must modify that function's comment to account for this change&mdash;if you make any changes at all.
-    * You may make any modifications you want to your `pirate_list.c` source file and you may remove print statements regarding the expansion and contraction of your list.
+    * You may make any modifications you want to your `pirate_list.c` source file, including the removal of print statements regarding the expansion and contraction of your list.
     Any modifications you make to source code *must* be reflected in relevant comments.
 1. You must release all resources that you acquire over the course of the program, including:
     * You must close every file that you open, and
@@ -139,15 +148,69 @@ In particular, you may only add at most one parameter to at most one function in
 
 Except for the efficiency and source code requirements above, the rest is up to you.
 Here are some recommendations to help you tackle this assignment.
-* Implement your input digestion algorithm as a [finite state machine](https://en.wikipedia.org/wiki/Finite-state_machine)
+* Although it is certainly not the only option, you might consider implementing your input digestion algorithm as a [finite state machine (FSM)](https://en.wikipedia.org/wiki/Finite-state_machine)
+    * Instead of a FSM, you might consider instead factoring out code to read a pirate's profile into a `read_profile(infile, ...)` function.
+
+    > **Note**: Although we have not discussed FSMs in class, they have a reasonably straightforward structure when implemented in C.
+    > Typically, the implementation of a FSM begins with the definintion of possible states as an `enum` (enumeration).
+    > For this problem, it might look like the following:
+    > ```C
+    > enum input_state
+    > {
+    >     PROFILE_BEGIN_STATE, PROFILE_CONTENTS_STATE
+    > };
+    > ```
+    >
+    > Then your transition function is implemented as a loop, each iteration of which you decide which state should come next based on the last input.
+    > That might look like the following (which is not complete for obvious reasons):
+    > ```C
+    > enum input_state current_state = PROFILE_BEGIN_STATE;
+    > fscanf("%64s:%[^\n]64s", label, value);
+    > pirate* current_pirate;
+    > while (true)
+    > {
+    >     switch (current_state)
+    >     {
+    >     case PROFILE_BEGIN_STATE:
+    >         // We must have just read a "name:<pirate-name>" line. Start a new pirate profile.
+    >         current_pirate = create_pirate_with_name(value);
+    >         // We're now inside of a pirate's profile, so switch states to PROFILE_CONTENTS_STATE.
+    >         current_state = PROFILE_CONTENTS_STATE;
+    >         break;
+    >     case PROFILE_CONTENTS_STATE:
+    >         // We are reading the contents of a pirate's profile. Decide if we're done.
+    >         fscanf("%64s:%[^\n]64s", label, value);
+    >         if (/* we just read a name, which starts a new profile */)
+    >         {
+    >             // We're done with this profile. Change state to PROFILE_BEGIN_STATE to start a new profile.
+    >             current_state = PROFILE_BEGIN_STATE;
+    >         }
+    >         else
+    >         {
+    >             // We're still on the same profile. Store this field with the pirate and remain in PROFILE_CONTENTS_STATE.
+    >             store_pirate_field(current_pirate, label, value);
+    >         }
+    >         break;
+    >     default:
+    >         break;
+    >     }
+    > }
+    > ```
+    > 
+    > The `switch` statement is a new statement type we have not discussed in class.
+    > Here are some resources to help you understand it better:
+    > * [Prof. Aspnes' Notes](https://www.cs.yale.edu/homes/aspnes/classes/223/notes.html#conditionals)
+    > * [cppreference.com](https://en.cppreference.com/w/c/language/switch)
+    > * [Wikipedia](https://en.wikipedia.org/wiki/Switch_statement)
+This poses its own set of challenges.
 * Define and implement a type for a "list of strings" to hold each pirate's skills.
 Pay careful attention to the runtime of the insertion operation!
     * This new type could be a slight modification of your `pirate_list` type, or it could be entirely different.
     * You might instead consider implementing a *generic* list type that can be used for both the pirates and their skills.
         > **Note**: If you choose to implement a generic list type, you may use it to replace `pirate_list`, and you may ignore the modification rules surrounding that file.
         > You might, however, find it challenging to correctly implement and integrate such a generic list into your solution for Part 1 within the time constraints of this assignment.
-* This assignment is designed such that it takes around 50 additional lines of code to implement on top of a very good solution to Part 1 of the HookBook assignment.
-Use that number as a target, but don't worry if you can't get your line count all the way down to 50.
+* This assignment is designed such that it takes around 50&ndash;75 additional lines of code to implement on top of a very good solution to Part 1 of the HookBook assignment.
+Use those numbers as a target, but don't worry if you can't get your line count all the way down to 50.
     * Definitely do not "minify" your code to reach 50 added lines.
     Lines of code (LOC, or SLOC if you exclude comments) is only one metric for determining code quality and complexity, and it is quite a bad metric for both.
 

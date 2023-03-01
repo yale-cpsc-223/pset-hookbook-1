@@ -1,6 +1,6 @@
 # Pset3: Ahoy Matey!
 
-### Due Wed, Mar 1 2023
+### Due Friday, Mar 10 2023
 
 Ahoy, matey!
 This exercise will get you started programming Hookbook.
@@ -106,7 +106,7 @@ Your program must:
         Your `main` function must:
         1. Take as the only command-line argument the path to a file containing the pirates' names who will be placed into our HookBook.
         1. Open that file and read from it the list of pirate names, appearing one on each line, storing them in a `pirate_list*`
-        1. Sort the list in [lexicographic (TODO: fix link)](https://wikipedia.org/lexicographic_ordering) order by pirate name
+        1. Sort the list in [lexicographic](https://en.wikipedia.org/wiki/Lexicographic_order) order by pirate name
         1. Print the sorted list to `stdout`, with one pirate name per line, following the last pirate's name with a newline character
         1. Release all resources (files, memory, _etc._)
 * `pirate_list.c` (Implementation), containing a body for every function declared in `pirate_list.h`, and a definition for `struct implementation`
@@ -194,13 +194,71 @@ Here are several example runs of the program showing the output both to `stdout`
 1. File with 30 names
     > File: `B_list.txt`
     > ```text
-    > TODO: 30 names here
+    > captain mansel alcantra
+    > john alexander
+    > algerine pirates
+    > ali basha
+    > captain alleston
+    > alwilda
+    > alexander ammand
+    > ibrahim ameer
+    > captain cornelius anderson
+    > captain androeas
+    > sultan of timor angora
+    > angria
+    > captain thomas anstis
+    > antonio
+    > john rose archer
+    > james austin
+    > captain john avery
+    > captain bridgeman
+    > captain aylett
+    > job baily
+    > captain baker
+    > roger ball
+    > john ballet
+    > captain baltizar
+    > captain bannister
+    > barbarosa
+    > redbeard
+    > captain nicholas barbe
+    > captain barnard
+    > captain barnes
 
     > Command and output:
     > ```text
     > $ ./HookBook B_list.txt
     > Expand to 50
-    > TODO: 30 names here
+    > alexander ammand
+    > algerine pirates
+    > ali basha
+    > alwilda
+    > angria
+    > antonio
+    > barbarosa
+    > captain alleston
+    > captain androeas
+    > captain aylett
+    > captain baker
+    > captain baltizar
+    > captain bannister
+    > captain barnard
+    > captain barnes
+    > captain bridgeman
+    > captain cornelius anderson
+    > captain john avery
+    > captain mansel alcantra
+    > captain nicholas barbe
+    > captain thomas anstis
+    > ibrahim ameer
+    > james austin
+    > job baily
+    > john alexander
+    > john ballet
+    > john rose archer
+    > redbeard
+    > roger ball
+    > sultan of timor angora
     > ```
 
 ## Assumptions

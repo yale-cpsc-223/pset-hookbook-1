@@ -1,0 +1,419 @@
+<h1 id="pset-3-5-pirate-profiles">Pset 3.5: Pirate Profiles</h1>
+<h3 id="due-fri-mar-10-2023">Due Fri, Mar 10 2023</h3>
+<p>This assignment builds on the other HookBook assignment, specified in <a href="README%20(part%201">README (Part
+        1).md</a>.md).
+    Follow those instructions before proceeding with this portion of the assignment.</p>
+<p><strong>Move your entire solution to the first part of the HookBook assignment into a folder named
+        <code>hookbook_1</code>, and create a second folder, <code>hookbook_2</code>, which will contain your solution
+        to this part of the assignment. You should copy all files from <code>hookbook_1</code> into
+        <code>hookbook_2</code> before beginning.</strong></p>
+<p>In this portion of the HookBook assignment, you will be expanding upon your previous program by adding more
+    flexibility and information to your collection of pirates.</p>
+<p>These pieces of information are:</p>
+<ol>
+    <li>The pirate&#39;s name</li>
+    <li>The pirate&#39;s current captain</li>
+    <li>The name of the pirate&#39;s current vessel of employ</li>
+    <li>The number of treasures the pirate has collected</li>
+    <li>A list of skills the pirate posesses</li>
+</ol>
+<p>You must write an application that reads data from <strong>two</strong> different text files&mdash;one containing
+    pirate profile information and another containing pirate/captain pairs&mdash;add those pirates to a list, sort that
+    list <em>according to an order defined at run-time</em>, and then print the pirates&#39; information to
+    <code>stdout</code>.</p>
+<p>The application must accept the following command-line arguments (in this order):</p>
+<ol>
+    <li>The name of a (text) file containing pirate profiles</li>
+    <li>The name of a (text) file containing pirate/captain pairs</li>
+    <li>One of <code>-n</code>, <code>-v</code>, or <code>-t</code>, identifying the order by which to sort the pirates
+        <ul>
+            <li>If <code>-n</code> is specified, the output of the pirates must be sorted in increasing lexicographic
+                order by the pirate&#39;s name</li>
+            <li>If <code>-v</code> is specified, the output of the pirates must be sorted in increasing lexicographic
+                order by the pirate&#39;s current vessel of employ</li>
+            <li>If <code>-t</code> is specified, the output of the pirates must be sorted by <em>decreasing</em> order
+                of the number of treasures the pirate has collected</li>
+        </ul>
+    </li>
+</ol>
+<h2 id="input-specification">Input Specification</h2>
+<p>The input to your program is two text files, passed by their file names at the command line.</p>
+<h3 id="pirate-profiles">Pirate Profiles</h3>
+<p>The first file will contain many pirate profiles, each beginning with a pirate&#39;s name on a line beginning with
+    the label &quot;<code>name</code>&quot; followed by a colon (<code>&#39;:&#39;</code>).
+    Each subsequent line of a profile contains a label followed by a colon (<code>&#39;:&#39;</code>) and then the value
+    for that label.
+    The possibilities for these lines are as follows:</p>
+<ul>
+    <li>The pirate&#39;s job title, with label &quot;<code>title</code>&quot;</li>
+    <li>The pirate&#39;s current vessel of employ, with label &quot;<code>vessel</code>&quot;</li>
+    <li>The pirate&#39;s favorite port of call, with label &quot;<code>port</code>&quot;</li>
+    <li>The number of treasures the pirate has collected, with label &quot;<code>treasure</code>&quot;</li>
+    <li>Zero or more skills this pirate posesses, each on its own line with the label &quot;<code>skill</code>&quot;
+    </li>
+</ul>
+<p>The next profile starts at the next line labeled <code>name</code>.</p>
+<h3 id="pirate-captain-pairs">Pirate/Captain Pairs</h3>
+<p>The second text file will identify the captain under which each pirate is currently sailing.
+    Each pirate/captain pair will be on a single line, with the two names separated by a single forward slash
+    (<code>&#39;/&#39;</code>)&mdash;the first name is the underling and the second name is their captain.</p>
+<h3 id="assumptions">Assumptions</h3>
+<p>There are several assumptions you may make about the structure of the input files:</p>
+<ul>
+    <li>If it exists, the file containing pirate profiles is properly formatted, that is:<ul>
+            <li>Every line has the form <code>&lt;label&gt;:&lt;value&gt;</code></li>
+            <li>Every non-<code>name</code> labeled line is meant to be associated with the pirate whose name appeared
+                most recently in the file.<blockquote>
+                    <p><strong>Corollary</strong>: the first line of the file is a pirate&#39;s name.</p>
+                </blockquote>
+            </li>
+            <li>Neither the label nor value on any line is longer than $64$ characters, nor will any label or value
+                contain <code>&#39;:&#39;</code>.</li>
+            <li>The value associated with the <code>treasure</code> for every pirate is a decimal integer between $0$
+                and $(2^{31} - 1)$.</li>
+        </ul>
+    </li>
+    <li>If it exists, the file containing pirate/captain pairs is properly formatted, that is:<ul>
+            <li>Every line has the form <code>&lt;pirate-name&gt;/&lt;captain-name&gt;</code></li>
+            <li>Every name in the file is the name of a pirate with a profile in the other file</li>
+            <li>No name of a pirate will contain <code>&#39;/&#39;</code></li>
+        </ul>
+    </li>
+</ul>
+<h3 id="anomalies">Anomalies</h3>
+<p>There are several anomalies that your program must handle:</p>
+<ul>
+    <li>The first two command-line arguments do not necessarily refer to text files that exist and are readable by your
+        program.
+        If either of the files is cannot be opened, your program must print a message to <code>stderr</code> and exit
+        with status code <code>1</code>.
+        The error message must be <code>&quot;Invalid filename: &quot;</code> followed by the value of the command-line
+        argument that caused the error, followed by a newline.<ul>
+            <li>If <em>both</em> files are unopenable, then the <em>first</em> filename should be displayed as the
+                invalid one, and the second one should be ignored.</li>
+        </ul>
+    </li>
+    <li>The third command-line argument could be anything.
+        If it is not one of <code>-n</code>, <code>-v</code>, or <code>-t</code>, your program must print a message to
+        <code>stderr</code> and exit with status code <code>1</code>.
+        The error message must be <code>&quot;Invalid argument: &quot;</code> followed by the value of the command-line
+        argument that caused the error, followed by a newline.</li>
+    <li>The program may be invoked with fewer than 3 command line arguments, in which case your program must print the
+        string <code>&quot;Invalid arguments&quot;</code> followed by a newline to <code>stderr</code> and exit with
+        status code <code>1</code>.</li>
+    <li>The program may be invoked with more than 3 command-line arguments, in which case your program must ignore any
+        argument after the third.</li>
+    <li>Except that the first line of a profile is the pirate&#39;s name, no order is defined among the fields in a
+        pirate&#39;s profile.</li>
+    <li>There may be some pirates that are missing a field in their profile (for example, a pirate that is unemployed
+        may not have a vessel in their profile).</li>
+    <li>Some lines may have a label that is not one of <code>name</code>, <code>title</code>, <code>vessel</code>,
+        <code>port</code>, <code>treasure</code>, or <code>skill</code>.
+        Such lines should be ignored.</li>
+    <li>There may be several pirate profiles that share a name, in which case only the profile for the <em>first</em>
+        pirate with a given name must be stored in the list of pirates.</li>
+    <li>There may be duplicate labels within a single profile (except for <code>name</code>).
+        In this case only the <em>last</em> value for a particular label must be persisted in the pirate&#39;s profile.
+        <blockquote>
+            <p><strong>Note</strong>: Skills are an exception to this, in that <em>every</em> listed skill must be
+                persisted to the pirate&#39;s profile</p>
+        </blockquote>
+    </li>
+    <li>There may be duplicate skills listed for a given pirate.
+        In this case, duplicate skills are to be interpreted as increased expertise by that pirate in that skill (the
+        number of occurences of a particular skill is that skill&#39;s &quot;rating&quot;), and the rating of a skill
+        must be persisted in the pirate&#39;s profile.</li>
+    <li>Not all pirates with a profile will be party to a pirate/captain pair</li>
+    <li>A pirate may be on the left-hand side of several pirate/captain pairs.
+        In this case only the <em>last</em> appearance of a pirate on the left-hand side of a pair should be persisted
+        in your application</li>
+    <li>It may be the case that the captain of one pirate also is the underling to a different captain.
+        <em>Both</em> of those relationships must be persisted in your application (so-called &quot;transitive
+        captainships&quot; of more than two degrees must also be persisted).<ul>
+            <li>These kinds of relationships may even be cyclical!
+                Your program must handle this possibility.</li>
+        </ul>
+    </li>
+    <li>If you encounter any other anomaly in the command-line arguments or input that is not explicitly forbidden by
+        the <a href="#assumptions">assumptions</a>, your program must exit with status code <code>1</code> and must not
+        cause a system error such as a segmentation fault.</li>
+</ul>
+<h2 id="output-specification">Output Specification</h2>
+<p>The output of your program must be the list of pirate profiles, sorted according to the third command-line argument,
+    each followed by a blank line.
+    Each pirate profile must have the following format:</p>
+<pre><code>Pirate: <span class="hljs-variable">&lt;pirate-name&gt;</span>
+    Title: <span class="hljs-variable">&lt;pirate-title&gt;</span>
+    Captain: <span class="hljs-variable">&lt;captain-name&gt;</span>
+        Captain's Title: <span class="hljs-variable">&lt;captain-title&gt;</span>
+        Captain's Favorite Port of C<span class="hljs-literal">all</span>: <span class="hljs-variable">&lt;captain-port&gt;</span>
+    Vessel: <span class="hljs-variable">&lt;pirate-vessel&gt;</span>
+    Treasure: <span class="hljs-variable">&lt;pirate-treasure&gt;</span>
+    Favorite Port of C<span class="hljs-literal">all</span>: <span class="hljs-variable">&lt;pirate-port&gt;</span>
+    Skills: <span class="hljs-variable">&lt;skill-0&gt;</span> <span class="hljs-variable">&lt;skill-0-rating&gt;</span>
+            <span class="hljs-variable">&lt;skill-1&gt;</span> <span class="hljs-variable">&lt;skill-1-rating&gt;</span>
+            <span class="hljs-variable">&lt;skill-2&gt;</span> <span class="hljs-variable">&lt;skill-2-rating&gt;</span>
+            [...and so <span class="hljs-keyword">on</span>]
+</code></pre>
+<p>In other words, the output for each pirate profile must begin with a line containing the text
+    <code>&quot;Pirate: &quot;</code> followed by the pirate&#39;s title and name (do not print <code>&lt;</code> or
+    <code>&gt;</code>).
+    Thereafter, each line must be indented by <strong>4 spaces</strong>, and contain&mdash;<em>in order</em>&mdash;the
+    pirate&#39;s title (labeled <code>&quot;Title: &quot;</code>), the profile of the pirate&#39;s captain (labeled and
+    indented as above), the pirate&#39;s vessel of employ (labeled <code>&quot;Vessel: &quot;</code>), the pirate&#39;s
+    treasure count (labeled <code>&quot;Treasure: &quot;</code>), and the pirate&#39;s favorite port of call (labeled
+    <code>&quot;Favorite Port of Call: &quot;</code>).
+    After those fields, there must be a list, labeled <code>&quot;Skills: &quot;</code>, containing all of the
+    pirate&#39;s skills and each skill&#39;s &quot;rating&quot;, with each skill and rating separated by a single space
+    and followed by a newline, and the skills must be left-aligned with one another (a total of <strong>12
+        spaces</strong> from the beginning of the line).
+    The rating must displayed as as series of asterisks (<code>&#39;*&#39;</code>), with the number of asterisks
+    matching the skill&#39;s rating.
+    The skills in the list must be sorted in increasing lexicographic order, and there must be only one occurrence of
+    each skill displayed in the output.</p>
+<p>For example, if a pirate&#39;s list of skills has 3 occurrences of &quot;swashbuckling&quot; and 1 ocurrence of
+    &quot;good with kids&quot;, the output would have the following lines:</p>
+<pre><code>    Skills: good <span class="hljs-keyword">with</span> kids *
+            swashbuckling ***
+</code></pre>
+<p>If there is any field that was not given a value in a pirate&#39;s profile, the text <code>&quot;(None)&quot;</code>
+    must be displayed on the corresponding line.
+    If a pirate has no captain, then the lines containing the captain&#39;s title and favorite port of call must not be
+    present at all.</p>
+<p>For example, Blackbeard&#39;s profile might be displayed like this:</p>
+<pre><code><span class="hljs-attribute">Pirate</span>: Blackbeard
+    <span class="hljs-attribute">Title</span>: Captain
+    <span class="hljs-attribute">Captain</span>: (None)
+    <span class="hljs-attribute">Vessel</span>: Queen Anne's Revenge
+    Favorite Port of <span class="hljs-attribute">Call</span>: New Providence
+    <span class="hljs-attribute">Skills</span>: intimidation ******
+            leadership ***
+            swashbuckling *
+</code></pre>
+<blockquote>
+    <p><strong>Note</strong>: It is a <a href="#requirements">requirement</a> that each pirate&#39;s profile is printed
+        in $O(s)$ time where $s$ is the <em>number of skills posessed by that pirate</em>.
+        Among other things, this means that you <em>may not</em> search the list of pirates for the captain&#39;s name
+        each time you print a pirate&#39;s profile.</p>
+</blockquote>
+<h2 id="efficiency-and-source-code-requirements">Efficiency and Source Code Requirements</h2>
+<p>Beyond correctness with regard to the <a href="#output-specification">output specification</a> above, there are
+    several other benchmarks your solution must pass to earn full credit on this assignment.</p>
+<ol>
+    <li>Creating a pirate from a profile in the input file must take no more than $O(s)$ time, where $s$ is the number
+        of skills (including duplicates) the pirate poseses.<ul>
+            <li>There is some subtlety here: the input specification does not forbid arbitrarily many lines of input
+                being associated with one pirate, due to its allowance of duplicates.
+                The time bound for creating a pirate applies <em>only</em> for pirate profiles that have no duplicate
+                non-skill entries (profiles with duplicate non-skill entries must meet no particular time bound for
+                their instantiation).<blockquote>
+                    <p><strong>Note</strong>: While the rating for each skill must be persisted, pay careful attention
+                        to this complexity requirement when deciding precisely <em>how</em> to persist skill ratings.
+                        An implication of this time bound is that each skill from input must be persisted in constant
+                        ($O(1)$) time.</p>
+                </blockquote>
+            </li>
+        </ul>
+    </li>
+    <li>Sorting the list of pirates must require no more than $O(n^2)$ comparisons, where $n$ is the number of pirates
+        in the list, <em>no matter which field is used to sort it</em>.</li>
+    <li>Printing a pirate&#39;s profile must take no more than $O(s^2)$ time, where $s$ is the number of skills the
+        pirate posesses.</li>
+    <li>You are required to make minimal modifications to the existing <code>pirate_list.h</code> header file.
+        In particular, you may only add at most one parameter to at most one function in the file, and you must modify
+        that function&#39;s comment to account for this change&mdash;if you make any changes at all.<ul>
+            <li>You may make any modifications you want to your <code>pirate_list.c</code> source file, including the
+                removal of print statements regarding the expansion and contraction of your list.
+                Any modifications you make to source code <em>must</em> be reflected in relevant comments.</li>
+        </ul>
+    </li>
+    <li>If your program completes successfully, it must release all resources that was acquired over the course of
+        execution, including:<ul>
+            <li>It must close every file that it opened, and</li>
+            <li>It must free all memory that it allocated</li>
+        </ul>
+    </li>
+    <li>Style penalties will be applied to submissions in which it is clear that little to no care was taken in part 1
+        to enable the kind of extension required in this assignment (part 2), and therefore that part 1 is
+        <em>substantially different</em> from part 2.
+        Part 2 is designed such that it can be solved with 75&ndash;100 additional lines of code on top of a good
+        solution to Part 1 of the HookBook assignment.<ul>
+            <li>Use those numbers as a guide, but don&#39;t worry if you can&#39;t get your line count all the way down
+                to 75, and definitely do not &quot;minify&quot; your code to reach 75 added lines.
+                Lines of code (LOC, or SLOC if you exclude comments) is only one metric for determining code quality and
+                complexity, and it is quite a bad metric for both.</li>
+        </ul>
+    </li>
+</ol>
+<h2 id="recommendations">Recommendations</h2>
+<p>Except for the efficiency and source code requirements above, the rest is up to you.
+    Here are some recommendations to help you tackle this assignment.</p>
+<ul>
+    <li>
+        <p>Although it is certainly not the only option, you might consider implementing your input digestion algorithm
+            as a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">finite-state machine (FSM)</a></p>
+        <ul>
+            <li>
+                <p>Instead of a FSM, you might consider instead factoring out code to read a pirate&#39;s profile into a
+                    <code>read_profile(infile, ...)</code> function.
+                    This poses its own set of challenges.</p>
+                <blockquote>
+                    <p><strong>Note</strong>: As with many other aspects of programming (pointers, project structure,
+                        object inheritance, system architecture, networks, ...), a finite-state machine is best
+                        understood by <em>drawing a picture</em> of it.
+                        We strongly encourage you to draw the state diagram of a FSM that would process the input as
+                        specified in this document before reading any further.
+                        Then, you can match your drawing to the skeleton state machine implemented below.</p>
+                </blockquote>
+            </li>
+        </ul>
+        <hr>
+        <blockquote>
+            <p>Although we have not discussed FSMs in class, they have a reasonably straightforward structure when
+                implemented in C.
+                Typically, the implementation of a FSM begins with the definintion of possible states as an
+                <code>enum</code> (enumeration), which defines a type with a fixed, finite set of possible values.
+                For this problem, it might look similar to the following:</p>
+            <pre><code class="lang-C">typedef <span class="hljs-class"><span class="hljs-keyword">enum</span></span>
+{
+    PROFILE_BEGIN_STATE, PROFILE_CONTENTS_STATE
+} input_state;
+</code></pre>
+            <p>Then your transition function is implemented as a loop, each iteration of which you decide which state
+                should come next based on the last input.
+                That might look like the following (which is not complete for obvious reasons):</p>
+            <pre><code class="lang-C">input<span class="hljs-number">_</span>state current<span class="hljs-number">_</span>state = PROFILE<span class="hljs-number">_</span>BEGIN<span class="hljs-number">_</span>STATE;
+read<span class="hljs-number">_</span>line<span class="hljs-number">_f</span>rom<span class="hljs-number">_f</span>ile(...);
+<span class="hljs-keyword">while</span> (<span class="hljs-comment">/* not at end of file */</span>)
+{
+    <span class="hljs-keyword">switch</span> (current<span class="hljs-number">_</span>state)
+    {
+    <span class="hljs-keyword">case</span> PROFILE<span class="hljs-number">_</span>BEGIN<span class="hljs-number">_</span>STATE:
+        <span class="hljs-comment">// We must have just read a "name:&lt;pirate-name&gt;" line. Start a new pirate profile.</span>
+        current<span class="hljs-number">_p</span>irate = create<span class="hljs-number">_p</span>irate(<span class="hljs-keyword">value</span>);
+        <span class="hljs-comment">// We're now inside of a pirate's profile, so switch states to PROFILE_CONTENTS_STATE.</span>
+        current<span class="hljs-number">_</span>state = PROFILE<span class="hljs-number">_</span>CONTENTS<span class="hljs-number">_</span>STATE;
+        <span class="hljs-keyword">break</span>;
+    <span class="hljs-keyword">case</span> PROFILE<span class="hljs-number">_</span>CONTENTS<span class="hljs-number">_</span>STATE:
+        <span class="hljs-comment">// We are reading the contents of a pirate's profile. Decide if we're done.</span>
+        read<span class="hljs-number">_</span>line<span class="hljs-number">_f</span>rom<span class="hljs-number">_f</span>ile(...);
+        <span class="hljs-keyword">if</span> (<span class="hljs-comment">/* we just read a name, which starts a new profile */</span>)
+        {
+            <span class="hljs-comment">// We're done with this profile. Change state to PROFILE_BEGIN_STATE to start a new profile.</span>
+            current<span class="hljs-number">_</span>state = PROFILE<span class="hljs-number">_</span>BEGIN<span class="hljs-number">_</span>STATE;
+        }
+        <span class="hljs-keyword">else</span>
+        {
+            <span class="hljs-comment">// We're still on the same profile. Store this field with the pirate and remain in PROFILE_CONTENTS_STATE.</span>
+            store<span class="hljs-number">_p</span>irate<span class="hljs-number">_f</span>ield(current<span class="hljs-number">_p</span>irate, label, <span class="hljs-keyword">value</span>);
+        }
+        <span class="hljs-keyword">break</span>;
+    <span class="hljs-keyword">default</span>:
+        <span class="hljs-keyword">break</span>;
+    }
+}
+</code></pre>
+            <p>The <code>switch</code> statement is a new statement type we have not discussed in class.
+                Within a <code>switch</code> statement, the <code>case</code> containing the value equal to the value of
+                the switch parameter is executed.
+                Statements following that case label are executed until a <code>break</code> statement is reached.
+                The <code>default</code> case is executed when the value of the switch parameter does not match any of
+                the case values.
+                It is not required when the cases are exhaustive of all possibilities, but is considered best practice
+                to include.
+                Here are some resources to help you understand it better:</p>
+            <ul>
+                <li><a href="https://www.cs.yale.edu/homes/aspnes/classes/223/notes.html#conditionals">Prof. Aspnes&#39;
+                        Notes</a></li>
+                <li><a href="https://en.cppreference.com/w/c/language/switch">cppreference.com</a></li>
+                <li><a href="https://en.wikipedia.org/wiki/Switch_statement">Wikipedia</a></li>
+            </ul>
+        </blockquote>
+    </li>
+    <li>
+        <p>Define and implement a type for a &quot;list of strings&quot; to hold each pirate&#39;s skills.
+            Pay careful attention to the runtime of the insertion operation!</p>
+        <ul>
+            <li>This new type could be a slight modification of your <code>pirate_list</code> type, or it could be
+                entirely different.</li>
+            <li>You might instead consider implementing a <em>generic</em> list type that can be used for both the
+                pirates and their skills.<blockquote>
+                    <p><strong>Note</strong>: If you choose to implement a generic list type, you may use it to replace
+                        <code>pirate_list</code>, and you may ignore the modification rules surrounding that file.
+                        You might, however, find it challenging to correctly implement and integrate such a generic list
+                        into your solution for Part 1 within the time constraints of this assignment.</p>
+                </blockquote>
+            </li>
+        </ul>
+    </li>
+</ul>
+<h2 id="correctness">Correctness</h2>
+<p>Your solution will be assessed for correctness according to the input/output specification above.
+    To aid you in your self-assessment of correctness, we will release a limited set of test cases against which you can
+    confirm things like input and output format specifics, but the test cases will not be exhaustive and you should
+    supplement them by devising more on your own.</p>
+<p>Your code will also be tested against an autograder running on Gradescope&#39;s servers.
+    In the event that your code produces output from the autograder that does not match what you expect&mdash;or if the
+    Gradescope autograder simply does not cooperate&mdash;your submission will be run on the Zoo, which in such a case
+    will be treated as the &quot;official&quot; behavior of your code.
+    <strong>It is therefore imperative that you test your program on the Zoo to confirm its behavior is
+        correct.</strong>
+</p>
+<h2 id="submission">Submission</h2>
+<p>This assignment is due <strong>Friday March 10, 2023 at 11:59 PM NHT (New Haven Time)</strong>.
+    You must submit your solution by uploading the following items or a <code>.zip</code> file containing the following
+    items to Gradescope by that deadline for full credit.</p>
+<ul>
+    <li>A folder named <code>hookbook_1</code>, which contains your solution to <a href="README%20(part%201">Part
+            1</a>.md) of the assignment, with the prescribed files<ul>
+            <li>The <code>hookbook_1</code> folder must, in addition to other files, contain a <code>LOG.md</code> file,
+                containing the information prescribed for the log file in earlier assignments, except that you do not
+                need an exact account of all hours worked&mdash;especially if you have already completed Part 1 of this
+                assignment</li>
+        </ul>
+    </li>
+    <li>A folder named <code>hookbook_2</code>, which contains your solution to Part 2 (this part) of the assignment.
+        Within that folder, there must be (at least) the following files:<ul>
+            <li><code>makefile</code> (or <code>Makefile</code>), containing a target named <code>HookBook</code> that
+                generates an executable named <code>HookBook</code> that, when run, satisfies the requirements outlined
+                in this document</li>
+            <li><code>LOG.md</code>, containing the information prescribed for the log file in earlier assignments</li>
+            <li>All files required to compile and run your program</li>
+        </ul>
+    </li>
+</ul>
+<hr>
+<h2 id="disclaimer">Disclaimer</h2>
+<p><strong>Any apparent contradiction in this document is unintentional.</strong>
+    We always do our best to keep these documents as unambiguous as possible, but as with all complex things small
+    pieces sometimes fall through the cracks.
+    Before reaching out to an instructor, ULA, or on Ed about a perceived contradiction in this spec, first read this
+    document very carefully and see if you just missed the clarification elsewhere, and then reflect on what you believe
+    our <em>intent</em> was when writing this document. Only if it is still not clear, seek assistance on the matter
+    after you have taken those two steps.
+    A good rule of thumb in judging our intent is that if there are several possible interpretations of some item in
+    this spec, the one that leads to the <em>more elegant solution</em> is the one we meant&mdash;our goal is not to
+    overwhelm you with tedium.
+    In any such case, even if our intent is clear, we urge you to note the ambiguity in your <code>LOG.md</code> file
+    you submit with your program.
+    Doing so helps us in two ways: first, so we can better understand why you might have made a decision that differs
+    from other students, and second, so that we can disambiguate a future version of this assignment.</p>
+<h3 id="pirate-skills">Pirate Skills</h3>
+<p>Here is a non-exhaustive list of the skills your pirates posess:</p>
+<ul>
+    <li>marksmanship</li>
+    <li>swashbuckling</li>
+    <li>cannon loading</li>
+    <li>pickpocketing</li>
+    <li>lockpicking</li>
+    <li>knot tying</li>
+    <li>cooking</li>
+    <li>navigating</li>
+    <li>charting</li>
+    <li>shanty singing</li>
+    <li>whip cracking</li>
+    <li>grog guzzling</li>
+    <li>rum running</li>
+</ul>
+<hr>
+<p>&copy;2023 Alan Weide and Ozan Erat</p>

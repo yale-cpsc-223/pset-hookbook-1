@@ -136,7 +136,7 @@ Pirate: Blackbeard
             swashbuckling *
 ```
 
-> **Note**: It is a [requirement](#requirements) that each pirate's profile is printed in $O(s)$ time where $s$ is the *number of skills posessed by that pirate*.
+> **Note**: It is a [requirement](#requirements) that each pirate's profile is printed in $O(s \log s)$ time where $s$ is the *number of skills posessed by that pirate*.
 > Among other things, this means that you *may not* search the list of pirates for the captain's name each time you print a pirate's profile.
 
 ## Efficiency and Source Code Requirements
@@ -148,7 +148,7 @@ Beyond correctness with regard to the [output specification](#output-specificati
     > **Note**: While the rating for each skill must be persisted, pay careful attention to this complexity requirement when deciding precisely *how* to persist skill ratings.
     > An implication of this time bound is that each skill from input must be persisted in constant ($O(1)$) time.
 1. Sorting the list of pirates must require no more than $O(n^2)$ comparisons, where $n$ is the number of pirates in the list, *no matter which field is used to sort it*.
-1. Printing a pirate's profile must take no more than $O(s^2)$ time, where $s$ is the number of skills the pirate posesses.
+1. Printing a pirate's profile must take no more than $O(s \log s)$ time, where $s$ is the number of skills the pirate posesses.
 1. You are required to make minimal modifications to the existing `pirate_list.h` header file.
 In particular, you may only add at most one parameter to at most one function in the file, and you must modify that function's comment to account for this change&mdash;if you make any changes at all.
     * You may make any modifications you want to your `pirate_list.c` source file, including the removal of print statements regarding the expansion and contraction of your list.
@@ -157,9 +157,9 @@ In particular, you may only add at most one parameter to at most one function in
     * It must close every file that it opened, and
     * It must free all memory that it allocated
 1. Style penalties will be applied to submissions in which it is clear that little to no care was taken in part 1 to enable the kind of extension required in this assignment (part 2), and therefore that part 1 is *substantially different* from part 2.
-Part 2 is designed such that it can be solved with 75&ndash;100 additional lines of code on top of a good solution to Part 1 of the HookBook assignment.
-    * Use those numbers as a guide, but don't worry if you can't get your line count all the way down to 75, and definitely do not "minify" your code to reach 75 added lines.
-    Lines of code (LOC, or SLOC if you exclude comments) is only one metric for determining code quality and complexity, and it is quite a bad metric for both.
+Part 2 is designed such that it can be solved with 100&ndash;150 additional lines of code (LOC, or SLOC if you exclude comments) on top of a very good solution to Part 1 of the HookBook assignment.
+    * Use those numbers as a guide, but don't worry if you can't get your line count this low, and definitely do not "minify" your code to reach those numbers.
+    LOC/SLOC is only one metric for measuring code quality and complexity, and it is quite a bad metric for both.
 
 ## Recommendations
 
@@ -232,9 +232,8 @@ Here are some recommendations to help you tackle this assignment.
 * Define and implement a type for a "list of strings" to hold each pirate's skills.
 Pay careful attention to the runtime of the insertion operation!
     * This new type could be a slight modification of your `pirate_list` type, or it could be entirely different.
-    * You might instead consider implementing a *generic* list type that can be used for both the pirates and their skills.
-        > **Note**: If you choose to implement a generic list type, you may use it to replace `pirate_list`, and you may ignore the modification rules surrounding that file.
-        > You might, however, find it challenging to correctly implement and integrate such a generic list into your solution for Part 1 within the time constraints of this assignment.
+    * You might instead consider implementing a *generic* list type that can be used for both the pirates and their skills, probably storing values of type `void*`.
+        > **Note**: If you choose to implement a generic list type, you may use it to replace `pirate_list`, and you may ignore the modification rules surrounding that file, though the efficiency requirements are still in effect.
 
 ## Correctness
 

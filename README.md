@@ -130,6 +130,7 @@ Pirate: Blackbeard
     Captain: (None)
     Vessel: Queen Anne's Revenge
     Favorite Port of Call: New Providence
+    Treasure: 12
     Skills: intimidation ******
             leadership ***
             swashbuckling *
@@ -152,7 +153,7 @@ Beyond correctness with regard to the [output specification](#output-specificati
 In particular, you may only add at most one parameter to at most one function in the file, and you must modify that function's comment to account for this change&mdash;if you make any changes at all.
     * You may make any modifications you want to your `pirate_list.c` source file, including the removal of print statements regarding the expansion and contraction of your list.
     Any modifications you make to source code *must* be reflected in relevant comments.
-1. If your program completes successfully, it must release all resources that was acquired over the course of execution, including:
+1. If your program completes successfully, it must release all resources that it acquired over the course of execution, including:
     * It must close every file that it opened, and
     * It must free all memory that it allocated
 1. Style penalties will be applied to submissions in which it is clear that little to no care was taken in part 1 to enable the kind of extension required in this assignment (part 2), and therefore that part 1 is *substantially different* from part 2.
